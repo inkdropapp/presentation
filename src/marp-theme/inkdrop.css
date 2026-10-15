@@ -1,0 +1,174 @@
+/*!
+ * Inkdrop theme for Marp.
+ *
+ * Builds on Marp's `default` theme for layout (heading scale, pagination,
+ * `lead`/`invert` classes, backgrounds) and re-points its colors and fonts at
+ * Inkdrop's CSS variables, so slides follow the active UI / preview / syntax
+ * theme. The variables are declared on the document's :root and inherit into
+ * the presentation's shadow root.
+ *
+ * @theme inkdrop
+ * @auto-scaling true
+ * @size 16:9 1280px 720px
+ * @size 4:3 960px 720px
+ */
+
+@import 'default';
+
+section,
+section:where(.invert) {
+  /* `default` forces `color-scheme: light` (or dark for .invert). Inkdrop's
+     variables use light-dark(), which resolves against the color-scheme of the
+     element consuming them, so inherit the app's scheme instead. */
+  color-scheme: inherit;
+
+  --fgColor-default: var(--text-color);
+  /* Transparent on translucent ("acrylic") windows; the presentation stage
+     behind the slide supplies an opaque background then. */
+  --bgColor-default: var(--editor-background-color, var(--page-background));
+  --fgColor-muted: var(--muted-text-color);
+  --fgColor-accent: var(--mde-preview-link-color, var(--link-color));
+  --borderColor-default: var(--border-color);
+  --borderColor-muted: var(--border-color);
+  --bgColor-muted: var(--mde-preview-codeblock-background-color);
+  --bgColor-neutral-muted: var(--mde-preview-inline-code-background-color);
+  --focus-outlineColor: var(--focused-outline-color);
+  --fontStack-sansSerif: var(--page-font);
+
+  --h1-color: var(--mde-preview-heading-color, var(--text-color));
+  --heading-strong-color: var(--mde-preview-strong-color, var(--text-color));
+  --header-footer-color: var(--muted-text-color);
+  --paginate-color: var(--muted-text-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--header-font, var(--page-font));
+  font-weight: var(--header-font-weight, 600);
+  color: var(--mde-preview-heading-color, var(--text-color));
+}
+
+strong {
+  color: var(--mde-preview-strong-color, inherit);
+}
+
+em {
+  color: var(--mde-preview-em-color, inherit);
+}
+
+a {
+  color: var(--mde-preview-link-color, var(--link-color));
+}
+
+mark {
+  color: var(--mde-preview-inline-mark-text-color, inherit);
+  background-color: var(--mde-preview-inline-mark-background-color);
+  text-decoration: underline var(--mde-preview-inline-mark-underline-color, transparent);
+}
+
+kbd {
+  color: var(--mde-preview-kbd-text-color, inherit);
+  background-color: var(--mde-preview-kbd-background-color);
+  border-color: var(--mde-preview-kbd-border-color);
+  box-shadow: inset 0 -1px 0 var(--mde-preview-kbd-shadow-color, transparent);
+}
+
+:not(pre) > code {
+  color: var(--mde-preview-inline-code-text-color, inherit);
+  background-color: var(--mde-preview-inline-code-background-color);
+  border: var(--mde-preview-inline-code-border-width, 0) solid
+    var(--mde-preview-inline-code-border-color, transparent);
+}
+
+pre {
+  color: var(--mde-preview-codeblock-text-color, var(--editor-foreground-color));
+  background-color: var(--mde-preview-codeblock-background-color);
+  border: 1px solid var(--mde-preview-codeblock-border-color, transparent);
+}
+
+blockquote {
+  color: var(--mde-preview-blockquote-text-color, var(--muted-text-color));
+  border-left-color: var(--mde-preview-blockquote-border-color, var(--border-color));
+}
+
+hr {
+  background-color: var(--mde-preview-hr-background-color, var(--border-color));
+  border-color: var(--mde-preview-hr-border-color, transparent);
+}
+
+table th {
+  color: var(--mde-preview-table-head-text-color, inherit);
+  background-color: var(--mde-preview-table-head-background-color);
+}
+
+table tr {
+  background-color: var(--mde-preview-table-row-background-color, transparent);
+  border-top-color: var(--mde-preview-table-row-border-color, var(--border-color));
+}
+
+table tr:nth-child(2n) {
+  background-color: var(--mde-preview-table-row-stripe-background-color, transparent);
+}
+
+table th,
+table td {
+  border-color: var(--mde-preview-table-border-color, var(--border-color));
+}
+
+/* `<!-- _class: scroll -->` (and every slide of a regular note, see
+   src/marp-markdown.ts): content taller than the slide scrolls instead of
+   being clipped. `default` centers with `safe center`, so the top stays
+   reachable. */
+section.scroll {
+  overflow-y: auto;
+}
+
+/* Task lists (src/marp-task-lists.ts), mirroring Inkdrop's preview. `default`
+   already hides the bullet and offsets the checkbox into the marker gutter. */
+ol > li.task-list-item {
+  list-style-type: inherit;
+}
+
+ol > li.task-list-item > .task-list-item-checkbox,
+ol > li.task-list-item > p > .task-list-item-checkbox {
+  margin: 0 0.2em 0 0;
+}
+
+.task-list-item .task-list-item-checkbox {
+  margin-inline-end: 0.3em;
+}
+
+.task-list-item.checked {
+  text-decoration: line-through;
+  text-decoration-color: var(--mde-preview-task-list-checked-color, var(--muted-text-color));
+}
+
+/* Disc bullets at every nesting level, like Inkdrop's preview (the browser
+   default switches to circle / square for nested lists). */
+ul {
+  list-style-type: disc;
+}
+
+/* List marker colors per nesting level, cycling like Inkdrop's preview
+   (@inkdropapp/css markdown.css). */
+li::marker,
+li li li li::marker,
+li li li li li li li::marker {
+  color: var(--mde-preview-list-marker-color, currentColor);
+}
+
+li li::marker,
+li li li li li::marker,
+li li li li li li li li::marker {
+  color: var(--mde-preview-list-marker-2-color, currentColor);
+}
+
+li li li::marker,
+li li li li li li::marker,
+li li li li li li li li li::marker {
+  color: var(--mde-preview-list-marker-3-color, currentColor);
+}

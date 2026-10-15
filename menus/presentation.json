@@ -1,0 +1,10 @@
+{
+  "context-menu": {
+    ".note-list-bar-item .note-list-item-view, .editor-header-more .menu": [
+      {
+        "label": "Show Presentation",
+        "command": "presentation:show"
+      }
+    ]
+  }
+}
