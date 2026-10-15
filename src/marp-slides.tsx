@@ -8,20 +8,38 @@ import { type CodeBlockTarget, CodePortals, takeCodeBlocks } from './code-portal
 import { getEnv } from './env'
 import { toPresentationMarkdown } from './marp-markdown'
 import { taskListsPlugin } from './marp-task-lists'
-import { useSyntaxCss } from './syntax-css'
+import { useShadowCss } from './shadow-css'
 
 import inkdropThemeCss from './marp-theme/inkdrop.css?text'
 
 /**
- * Shows one slide at a time, letterboxed to the stage. Injected after Marp's
- * CSS with Marpit's own `div.marpit > svg` selector form, so it wins over any
- * Marp rule by both order and specificity.
+ * Shows one slide at a time, letterboxed to the stage, and fits mermaid
+ * diagrams to the slide. Injected after Marp's CSS with Marpit's own
+ * `div.marpit > svg` selector form, so it wins over any Marp rule by both order
+ * and specificity.
+ *
+ * Fitting: a slide with a top-level mermaid block becomes a flex column (Marp's
+ * themes already set `flex-flow: column`) and the diagram takes the remaining
+ * height, never below 240px (scrollable slides scroll instead). The diagram
+ * internals mirror the `fill` variant of @inkdropapp/mermaid's CSS: the SVG
+ * drops its natural max-width and scales to fit both axes via its viewBox.
  */
+const SLIDE = 'div.marpit > svg > foreignObject > section'
+const DIAGRAM = '.presentation-code-component .mermaid-diagram'
 const STAGE_CSS = `
 :host { display: block; width: 100%; height: 100%; }
 .mde-preview, div.marpit { width: 100%; height: 100%; }
 div.marpit > svg[data-marpit-svg] { display: none; width: 100%; height: 100%; }
 div.marpit > svg[data-marpit-svg][data-active] { display: block; }
+
+${SLIDE}:has(> .presentation-code-component .mermaid-diagram) { display: flex; }
+${SLIDE} > .presentation-code-component:has(.mermaid-diagram) {
+  flex: 1 1 0; min-height: 240px; display: flex; flex-direction: column;
+}
+${DIAGRAM} { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+${DIAGRAM} > .mermaid-diagram-content { flex: 1 1 0; min-height: 0; }
+${DIAGRAM} > .mermaid-diagram-content > div { width: 100%; height: 100%; }
+${DIAGRAM} > .mermaid-diagram-content svg { max-width: none !important; width: 100%; height: 100%; }
 `
 
 let marp: Marp | undefined
@@ -53,7 +71,7 @@ export interface MarpSlidesProps {
 export default function MarpSlides({ markdown }: MarpSlidesProps) {
   const [Button] = useState(() => getEnv().components.getComponentClass<ButtonProps>('Button')!)
   const hostRef = useRef<HTMLDivElement>(null)
-  const syntaxCss = useSyntaxCss()
+  const appCss = useShadowCss()
   const { html, css } = useMemo(
     () => getMarp().render(resolveAttachmentUris(toPresentationMarkdown(markdown))),
     [markdown]
@@ -69,7 +87,7 @@ export default function MarpSlides({ markdown }: MarpSlidesProps) {
     if (!host) return
     const root = host.shadowRoot ?? host.attachShadow({ mode: 'open' })
     root.innerHTML =
-      `<style data-syntax></style><style>${css}</style><style>${STAGE_CSS}</style>` +
+      `<style data-app></style><style>${css}</style><style>${STAGE_CSS}</style>` +
       `<div class="mde-preview">${html}</div>`
     const marpBrowser = browser(root)
     setSlides(Array.from(root.querySelectorAll<SVGElement>('div.marpit > svg[data-marpit-svg]')))
@@ -78,9 +96,9 @@ export default function MarpSlides({ markdown }: MarpSlidesProps) {
   }, [html, css])
 
   useLayoutEffect(() => {
-    const style = hostRef.current?.shadowRoot?.querySelector('style[data-syntax]')
-    if (style) style.textContent = syntaxCss
-  }, [syntaxCss, html])
+    const style = hostRef.current?.shadowRoot?.querySelector('style[data-app]')
+    if (style) style.textContent = appCss
+  }, [appCss, html])
 
   const count = slides.length
   const current = Math.min(index, Math.max(count - 1, 0))

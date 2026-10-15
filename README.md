@@ -85,7 +85,8 @@ A note without `marp: true` is presented in **auto mode**:
 - **Code blocks** are highlighted by Inkdrop's own highlighter, so colors and languages match the editor, including languages added by plugins.
 - **Images attached to the note** (`inkdrop://file:…`) display, both inline and as Marp backgrounds.
 - **Task lists** (`- [ ]` / `- [x]`) render with checkboxes. Checked items are struck through.
-- **Math** works the same way as in Marp.
+- **Math** in `$…$` and `$$…$$` is rendered by Marp.
+- **Code blocks handled by other plugins** render as they do in the preview when that plugin is installed, for example ` ```mermaid ` diagrams with the [mermaid](https://my.inkdrop.app/plugins/mermaid) plugin and ` ```math ` blocks with the [math](https://my.inkdrop.app/plugins/math) plugin. Mermaid diagrams are scaled to fit the space left on the slide.
 
 ## Preferences
 

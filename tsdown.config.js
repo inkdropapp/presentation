@@ -54,7 +54,7 @@ export default defineConfig({
           // highlight.js…), kept out of the eager entry chunk and loaded on the
           // first "Show presentation".
           name: 'marp',
-          test: /node_modules|[\\/]src[\\/](marp-|code-portals|syntax-css)/,
+          test: /node_modules|[\\/]src[\\/](marp-|code-portals|shadow-css)/,
           priority: 10
         }
       ]
