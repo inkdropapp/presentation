@@ -22,6 +22,8 @@ Open a presentation in any of these ways:
 - Choose **Show Presentation** from the editor header's **…** menu.
 - Right-click a note in the note list and choose **Show Presentation**.
 
+<img src="docs/editor-header-button.png" width="286" alt="The Show Presentation button in the editor header bar">
+
 The presentation fills the current window.
 
 | Key                                                                           | Action             |
