@@ -172,3 +172,46 @@ li li li li li li::marker,
 li li li li li li li li li::marker {
   color: var(--mde-preview-list-marker-3-color, currentColor);
 }
+
+/* GitHub alerts (src/marp-alerts.ts), mirroring Inkdrop's preview. */
+section .gfm-alert {
+  margin: 0 0 16px;
+  padding: 0.5rem 1rem;
+  border-left: 0.25em solid;
+}
+
+section p.gfm-alert-title {
+  margin: 0 0 16px;
+  font-weight: 600;
+}
+
+section .gfm-alert-type-note {
+  border-color: var(--gfm-alert-note);
+}
+section .gfm-alert-type-note > p.gfm-alert-title {
+  color: var(--gfm-alert-note);
+}
+section .gfm-alert-type-tip {
+  border-color: var(--gfm-alert-tip);
+}
+section .gfm-alert-type-tip > p.gfm-alert-title {
+  color: var(--gfm-alert-tip);
+}
+section .gfm-alert-type-important {
+  border-color: var(--gfm-alert-important);
+}
+section .gfm-alert-type-important > p.gfm-alert-title {
+  color: var(--gfm-alert-important);
+}
+section .gfm-alert-type-warning {
+  border-color: var(--gfm-alert-warning);
+}
+section .gfm-alert-type-warning > p.gfm-alert-title {
+  color: var(--gfm-alert-warning);
+}
+section .gfm-alert-type-caution {
+  border-color: var(--gfm-alert-caution);
+}
+section .gfm-alert-type-caution > p.gfm-alert-title {
+  color: var(--gfm-alert-caution);
+}

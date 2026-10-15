@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { type CodeBlockTarget, CodePortals, takeCodeBlocks } from './code-portals'
 import { getEnv } from './env'
+import { alertsPlugin } from './marp-alerts'
 import { toPresentationMarkdown } from './marp-markdown'
 import { taskListsPlugin } from './marp-task-lists'
 import { useShadowCss } from './shadow-css'
@@ -46,7 +47,7 @@ let marp: Marp | undefined
 
 function getMarp(): Marp {
   if (!marp) {
-    marp = new Marp({ script: false }).use(taskListsPlugin)
+    marp = new Marp({ script: false }).use(taskListsPlugin).use(alertsPlugin)
     // Fenced code is left plain here and highlighted by Inkdrop's own
     // highlighter afterwards (see code-portals.tsx).
     marp.highlighter = () => ''
