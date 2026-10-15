@@ -2,6 +2,8 @@
 
 Present any note as slides, right in the Inkdrop window. Notes written for [Marp](https://marp.app/) render as Marp decks, and regular notes are split into slides automatically. Slides follow your current Inkdrop theme, including light and dark mode.
 
+![Presentations in various Inkdrop themes](docs/screenshot.png)
+
 ## Install
 
 Check out [the docs](https://docs.inkdrop.app/manual/extend-inkdrop-with-plugins) on how to install plugins.
