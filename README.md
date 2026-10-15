@@ -83,6 +83,12 @@ A note without `marp: true` is presented in **auto mode**:
 - **Task lists** (`- [ ]` / `- [x]`) render with checkboxes. Checked items are struck through.
 - **Math** works the same way as in Marp.
 
+## Preferences
+
+| Setting                    | Default | Description                                                                                                                                                  |
+| -------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Transparent background** | Off     | Show the window background behind the slides instead of the editor background. With the translucent window style, this lets the frosted window show through. |
+
 ## Development
 
 ```shell

@@ -20,6 +20,19 @@ const MarpSlides = lazy(() => import('./marp-slides'))
  * `presentation:show` command dispatched by the note-list / editor-header
  * context menus and presents the target note as Marp slides.
  */
+/** Live value of the `presentation.transparentBackground` setting. */
+function useTransparentBackground(): boolean {
+  const { config } = getEnv()
+  const [value, setValue] = useState<boolean>(() =>
+    config.get('presentation.transparentBackground')
+  )
+  useEffect(() => {
+    const sub = config.observe('presentation.transparentBackground', setValue)
+    return () => sub.dispose()
+  }, [config])
+  return value
+}
+
 export const PresentationViewer: React.FC = () => {
   const [{ Modal, Button }] = useState(() => ({
     Modal: getEnv().components.getComponentClass<ModalProps>('Modal')!,
@@ -32,6 +45,7 @@ export const PresentationViewer: React.FC = () => {
     openId: number
   } | null>(null)
   const close = useCallback(() => setPresentation(null), [])
+  const transparent = useTransparentBackground()
 
   useEffect(() => {
     const sub = getEnv().commands.add<PresentationCommands>(document.body, {
@@ -56,7 +70,12 @@ export const PresentationViewer: React.FC = () => {
   }, [])
 
   return (
-    <Modal visible={!!presentation} autofocus className="presentation-viewer" onEscKeyDown={close}>
+    <Modal
+      visible={!!presentation}
+      autofocus
+      className={transparent ? 'presentation-viewer transparent' : 'presentation-viewer'}
+      onEscKeyDown={close}
+    >
       <div className="presentation-stage">
         {presentation && (
           <Suspense fallback={null}>

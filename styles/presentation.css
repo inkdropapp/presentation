@@ -1,7 +1,26 @@
 /* Full-window presentation chrome — Inkdrop's Modal stretched over the whole
    window. The slides themselves render inside a shadow root (see
    src/marp-slides.tsx); everything here is the shell around them. */
+
+/* While presenting, hide the app behind the modal; the modal itself carries
+   the editor pane's background, which stays translucent on acrylic windows.
+   The modal is only in the DOM while open. */
+body:has(.modal-container.presentation-viewer)
+  :is(.sidebar-layout, .note-list-bar-layout, .editor-layout) {
+  opacity: 0 !important;
+}
+
 .modal-container.presentation-viewer {
+  /* Same background as `.editor-layout`. `!important` overrides the Modal's
+     animated inline backdrop tint. */
+  background: var(--editor-background) !important;
+
+  /* `presentation.transparentBackground`: the window background (e.g. the
+     acrylic style) shows straight through. */
+  &.transparent {
+    background: transparent !important;
+  }
+
   .modal-content {
     width: 100vw;
     height: 100vh;
@@ -15,13 +34,9 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      /* Opaque in every theme — also shows through slides whose background
-         is transparent (the editor background on translucent windows). */
-      background-color: var(--modal-box-content-background);
 
       /* Top-edge strip; the close button sits at its right end (clear of the
-         macOS traffic lights on the left) and appears only while the pointer
-         is over the strip. */
+         macOS traffic lights on the left). */
       > .presentation-topbar {
         position: absolute;
         top: 0;
